@@ -6,32 +6,61 @@ public class EnemyBehaviour : MonoBehaviour
 {
     public AudioClip destructionSFX;
 
-    // physical simulation hits. For Unity to call this function, at least one of the colliding objects
-	// needs to have their RigidBody component set to "Dynamic" for Body Type
+      public float offScreenMargin = 1f; 
+
+    // Reference to the QuitButton script
+    public QuitButton quitButton;
+
     private void OnCollisionEnter2D(Collision2D collision)
     {
         print("I Collided!");
     }
 
-    // Unity calls this function if the Collider on the game object has "Is Trigger" checked.
-	// Then it doesn't physically react to hits but still detects them
     private void OnTriggerEnter2D(Collider2D collision)
     {
         print("I was triggered!");
 
-		// Check the other colliding object's tag to know if it's
-		// indeed a player projectile
         if (collision.tag == "Laser")
         {
-            // Destroy the alien game object
             Destroy(gameObject);
-			
-            // Destroy the projectile game object
+
             Destroy(collision.gameObject);
-			
-			// Play an audio clip in the scene and not attached to the alien
-			// so the sound keeps playing even after it's destroyed
+
             AudioSource.PlayClipAtPoint(destructionSFX, transform.position);
         }
+    }
+
+    void Update()
+    {
+        // Check if the enemy is off the screen and trigger game over if true
+        CheckIfOffScreen();
+    }
+
+    void CheckIfOffScreen()
+    {
+        // Get the enemy's position in the viewport space
+        Vector3 screenPos = Camera.main.WorldToViewportPoint(transform.position);
+
+        // If the enemy is outside the screen (using a margin for buffer)
+        if (screenPos.x < -offScreenMargin || screenPos.x > 1 + offScreenMargin || screenPos.y < -offScreenMargin || screenPos.y > 1 + offScreenMargin)
+        {
+            EndGame();
+        }
+    }
+
+    // Ending of the game
+    void EndGame()
+    {
+        // Log the game over message or trigger actual game over logic
+        Debug.Log("Game Over! Enemy went off screen.");
+
+        // Quit Trigger to quit game after the event
+        if (quitButton != null)
+        {
+            quitButton.QuitGame();
+        }
+
+        // Stop the game
+        Time.timeScale = 0f;
     }
 }
