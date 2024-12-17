@@ -60,6 +60,8 @@ public class EnemyBehaviour : MonoBehaviour
             quitButton.QuitGame();
         }
 
+        Application.Quit();
+
         // Stop the game
         Time.timeScale = 0f;
     }
