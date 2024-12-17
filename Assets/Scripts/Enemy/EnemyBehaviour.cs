@@ -4,9 +4,11 @@ using UnityEngine;
 
 public class EnemyBehaviour : MonoBehaviour
 {
+   
     public AudioClip destructionSFX;
 
-      public float offScreenMargin = 1f; 
+      public float offScreenMargin = 1f;
+      private int health = 2;
 
     // Reference to the QuitButton script
     public QuitButton quitButton;
@@ -22,11 +24,14 @@ public class EnemyBehaviour : MonoBehaviour
 
         if (collision.tag == "Laser")
         {
-            Destroy(gameObject);
-
+            health--;
+            if(health <= 0)
+            {
+                Destroy(gameObject);
+                                          
+                AudioSource.PlayClipAtPoint(destructionSFX, transform.position);
+            }
             Destroy(collision.gameObject);
-
-            AudioSource.PlayClipAtPoint(destructionSFX, transform.position);
         }
     }
 

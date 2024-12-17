@@ -4,6 +4,7 @@ using UnityEngine.SceneManagement;
 
 public class EnemyController : MonoBehaviour
 {
+
     public float minPosX;
     public float maxPosX;
 
@@ -17,6 +18,8 @@ public class EnemyController : MonoBehaviour
 	
 	// I added a switch to try both methods
 	public bool isUsingCountdown = true;
+
+
 
     // Use this for initialization
     void Start()
